@@ -127,37 +127,40 @@ if filereadable("/etc/vimrc.local")
   source /etc/vimrc.local
 endif
 
+" vim-plug section:
+" Install vim-plug if not found
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-" vim-plug section:
-call plug#begin(expand('~/.vim/plugged'))
+" Run PlugInstall if there are missing plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source $MYVIMRC
+\| endif
+call plug#begin('~/.vim/plugged')
 
-Plug 'tpope/vim-fugitive'
-Plug 'arcticicestudio/nord-vim'
+Plug 'ghifarit53/tokyonight-vim'
 Plug 'preservim/nerdtree'
-Plug 'vim-airline/vim-airline'
+Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
+Plug 'vim-airline/vim-airline'
 Plug 'raimondi/delimitmate'
+Plug 'x4m3/vim-epitech'
 
 call plug#end()
 
-colorscheme nord
-let g:nord_cursor_line_number_background = 1
-let g:nord_uniform_status_lines = 1
-let g:nord_bold_vertical_split_line = 1
-let g:nord_italic = 1
-let g:nord_italic_comments = 1
-let g:nord_underline = 1
-
+set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
+set number
 map <C-n> :NERDTreeToggle<CR>
+
+set termguicolors
+let g:tokyonight_style = 'night' " available: night, storm
+let g:tokyonight_enable_italic = 1
+colorscheme tokyonight
+autocmd InsertEnter * set cursorline
+autocmd InsertLeave * set nocursorline
+
 set laststatus=2
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
-
-set number
-autocmd InsertEnter * set cursorline
-autocmd InsertLeave * set nocursorline
